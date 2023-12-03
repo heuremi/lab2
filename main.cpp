@@ -104,14 +104,49 @@ void cargarPartida(const string& archivo) {
         }
 
         entrada.close();
+}
+
+bool hayJuegoCargado(const string& archivo){
+	    ifstream existePartida(archivo);
+
+        if (!existePartida) {
+            cout << "Error al abrir el archivo para cargar la partida. Se creará un tablero nuevo." << endl;
+            return;
+        }
+
+        // Cargar el estado del tablero desde el archivo
+        for (int i = 0; i < filas; ++i) {
+            for (int j = 0; j < columnas; ++j) {
+               // entrada >> tablero[i][j];
+            }
+        }
+		existePartida.close();
+}
+
+void verEstadisticas(const string& archivo){
+	ifstream entrada(archivo);
+
+    if (!entrada) {
+        cout << "Error al abrir el archivo para cargar la partida. Se creará un tablero nuevo." << endl;
+        return;
     }
 
+    // Cargar el estado del tablero desde el archivo
+    for (int i = 0; i < filas; ++i) {
+        for (int j = 0; j < columnas; ++j) {
+            // entrada >> tablero[i][j];
+         }
+    }
+
+    entrada.close();
+}
+
 int main(){
-	if(hayJuegoCargado){
+	if(hayJuegoCargado("historial.csv")){
 		cout << "Hola!, deseas retomar el juego guardado?\n1) Si.\n2) No." << endl;
 		string op; cin >> op;
 		if(op == "1"){
-			retomarJuegoCargado();
+			cargarPartida("historial.csv");
 		} else {
 			cout << "Volviendo al menu." << endl;
 		}
@@ -127,7 +162,7 @@ int main(){
 			jugarPartida();
 		} 
 		else if(opcion == "2"){
-			verEstadisticas();
+			verEstadisticas("historial.csv");
 		} 
 		else if(opcion == "3"){
 			cout << "Nos vemos pronto!" << endl;

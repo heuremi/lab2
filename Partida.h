@@ -19,6 +19,17 @@ class Partida
                 }
             }
         }
+        char getPieza(int fila, int columna){
+            switch(tableroActual[fila][columna]){
+                case 0:
+                    return ' ';
+                case 1: 
+                    return 'X';
+                case 2:
+                    return 'O'; 
+            }
+            return 'a';
+        }
         void mostrarTablero(){
             for(int i = 0; i < filas; i++){
                 cout << "|";
@@ -45,7 +56,7 @@ class Partida
             }
             return true;
         }
-        bool hacerMovimiento(int columnaActual, int jugador){
+        bool hacerMovimiento(int columnaActual, char jugador){
             if(columnaActual < 0 || columnaActual >= columnas || columnaLlena(columnaActual)){
                 return false;
             }

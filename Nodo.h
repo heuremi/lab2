@@ -9,9 +9,17 @@ class Nodo {
 	private:
 		vector<Nodo*> hijos;
 		int puntaje;
+		int tablero[filas][columnas];
+		int jugadorActual;
 	public:
-	Nodo(){
+	Nodo(int jugadorAct){
 		puntaje = 0;
+		jugadorActual = jugadorAct;
+        for (int i = 0; i < filas; ++i) {
+            for (int j = 0; j < columnas; ++j) {
+                tablero[i][j] = 0;
+            }
+        }
 	}
 	~Nodo(){};
 };
