@@ -1,4 +1,5 @@
 #include <bits/stdc++.h>
+#include <fstream>
 #include "Minimax.h"
 using namespace std;
 
@@ -222,12 +223,26 @@ int SeleccionInicio(){
 	return 0;
 }
 
-void Partida1jug(){
-	char partida[filas][columnas]; 
-	int dificultad;
-	NuevaPartida(partida);
-	PantallaSeleccionDificultad(&dificultad);
-	bool inicial = SeleccionInicio();
+void guardarPartida(string nombreArchivo, char partida[filas][columnas]){
+	ofstream archivo(nombreArchivo);
+
+	if(!archivo.is_open()){
+		cout<<"Error al abrir el archivo CSV para guardar la partida"<<endl;
+		return;
+	}
+
+	for(int i = 0; i < filas; i++){
+		archivo<<"|";
+		for(int j = 0; j < columnas; j++){
+			archivo << partida[i][j];
+			archivo<<"|";
+		}
+		archivo<<endl;
+	}
+	archivo.close();
+}
+
+void Partida1jug(char partida[filas][columnas], bool inicial, int dificultad){
 	int contador_jugadas = 1;
 	while(1){
 		inicial = (inicial == 0) ? 1 : 0;
@@ -258,73 +273,51 @@ void Partida1jug(){
 			cout << "Empate!!" << endl;
 			return;
 		}
+		guardarPartida("ultimaPartida.csv", partida);
 
 		contador_jugadas++;
 	}
 }
 
-/*
-void guardarPartida(const string& archivo, Partida partida) {
-	ofstream salida(archivo);
-
-	if (!salida) {
-		cout << "Error al abrir el archivo para guardar la partida." << endl;
-		return;
-	}
-
-	// Guardar el estado actual del tablero en el archivo
-	for (int i = 0; i < filas; ++i) {
-		for (int j = 0; j < columnas; ++j) {
-			
-			salida << partida.getPieza(i, j) << " ";
-		}
-		salida << "\n";
-	}
-
-	salida.close();
+void ConfiguracionPartida(){
+	char partida[filas][columnas]; 
+	int dificultad;
+	NuevaPartida(partida);
+	PantallaSeleccionDificultad(&dificultad);
+	bool inicial = SeleccionInicio();
+	Partida1jug(partida, inicial, dificultad);
 }
-*/
-void cargarPartida(string nombreArchivo){
-	ifstream archivo(nombreArchivo);
 
-	if(!archivo.is_open()){
-		cout<< "Error al abrir el archivo CSV para cargar la partida"<<endl;
-		return;
-	}
+void cargarPartida(string nombreArchivo) {
+	char partida[filas][columnas]; 
+	NuevaPartida(partida);
+    ifstream archivo(nombreArchivo);
 
-	for(int i = 0; i < filas; i++){
-		for(int j = 0; j < columnas; j++){
-			char valor;
-			archivo>>valor;
-			//tablero[i][j] = valor - '0';
-			archivo.ignore();
-		}
-	}
-	archivo.close();
-}
-/*
-
-void verEstadisticas(const string& archivo){
-	ifstream entrada(archivo);
-
-    if (!entrada) {
-        cout << "Error al abrir el archivo para cargar la partida. Se creará un tablero nuevo." << endl;
+    if (!archivo.is_open()) {
+        cout << "Error al abrir el archivo CSV para cargar la partida" << endl;
         return;
     }
 
-    // Cargar el estado del tablero desde el archivo
     for (int i = 0; i < filas; ++i) {
         for (int j = 0; j < columnas; ++j) {
-            // entrada >> tablero[i][j];
-         }
+            char valor;
+            archivo >> valor;
+            if (valor == '|') {
+                // Ignorar los delimitadores '|'
+                archivo.ignore();
+            } else {
+                // Asignar el valor leído a la matriz partida
+                partida[i][j] = valor;
+            }
+        }
     }
 
-    entrada.close();
+    archivo.close();
+	Partida1jug(partida, 0, 1);
 }
-*/
 
 int main(){
-	cargarPartida("ultimaPartida.csv");
+	//cargarPartida("ultimaPartida.csv");
 	
 	while(1){
 		cout << "---------- MENU ----------" << endl;
@@ -332,7 +325,7 @@ int main(){
 		cout << "2) Salir." << endl;
 		string opcion; cin >> opcion;
 		if(opcion == "1"){
-			Partida1jug();
+			ConfiguracionPartida();
 		} 
 		else if(opcion == "2"){
 			cout << "Nos vemos pronto!" << endl;
