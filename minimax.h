@@ -4,6 +4,7 @@ using namespace std;
 const int filas = 6;
 const int columnas = 7;
 
+//creacion del struct nodo
 struct Nodo{
 	struct Nodo **hijos;
 	int *movimientos;
@@ -13,6 +14,7 @@ struct Nodo{
 	int nivel;
 };
 
+//copia tablero
 void CopiaTablero(char tablero1[filas][columnas], char tablero2[filas][columnas]){
 	for(int i = 0;i < filas; i++){
 		for(int j = 0; j < columnas; j++){
@@ -21,6 +23,7 @@ void CopiaTablero(char tablero1[filas][columnas], char tablero2[filas][columnas]
 	}
 }
 
+//crea nodo
 Nodo CreaNodo(char tablero[filas][columnas],int nivel,int dificultad, int posibilidades, bool victoriaCPU, bool victoriaJugador){
 	int j=0;
 	Nodo p;
@@ -52,6 +55,7 @@ Nodo CreaNodo(char tablero[filas][columnas],int nivel,int dificultad, int posibi
 	return p;
 }
 
+//realiza la jugada
 void AplicarTirada(char partida[filas][columnas],int columna, char ficha){
 	for(int i = 0; i < filas; i++){
 		if(partida[filas-1-i][columna] == ' '){
@@ -61,6 +65,7 @@ void AplicarTirada(char partida[filas][columnas],int columna, char ficha){
 	}
 }
 
+//crea nivel
 void CreaNivel(Nodo *Padre,char ficha,int dificultad, int posibilidades, bool victoriaCPU, bool victoriaJugador){
 	int i;
 	Nodo *Hijo;
@@ -74,6 +79,7 @@ void CreaNivel(Nodo *Padre,char ficha,int dificultad, int posibilidades, bool vi
 	}
 }
 
+//crea un segundo nivel
 void CreaDobleNivel(Nodo *raiz,int dificultad, int posibilidades, bool victoriaCPU, bool victoriaJugador){
 	int i;
 	CreaNivel(raiz,'X',dificultad, posibilidades, victoriaCPU, victoriaJugador);
@@ -82,6 +88,7 @@ void CreaDobleNivel(Nodo *raiz,int dificultad, int posibilidades, bool victoriaC
 	}
 }
 
+//crea el arbol
 void CreaArbol(Nodo *raiz, int profundidad, int dificultad, int posibilidades, bool victoriaCPU, bool victoriaJugador){
 	CreaDobleNivel(raiz,dificultad, posibilidades, victoriaCPU, victoriaJugador);
 	if(profundidad == 0) return;
@@ -96,6 +103,7 @@ void CreaArbol(Nodo *raiz, int profundidad, int dificultad, int posibilidades, b
 	return;
 }
 
+//borra arbol
 void BorraArbol(Nodo *raiz){
 	if(raiz->n_hijos == 0){
         free(raiz);
@@ -112,6 +120,7 @@ void BorraArbol(Nodo *raiz){
 	return;
 }
 
+//le asigna valor a las hojas
 void ValorarHojas(Nodo *raiz, double heuristica){
     if (raiz->n_hijos == 0){
         raiz->valor = heuristica;
@@ -124,6 +133,7 @@ void ValorarHojas(Nodo *raiz, double heuristica){
     }
 }
 
+//minimax con poda alfa beta
 void MiniMaxConPoda(Nodo *Raiz, double alpha, double beta) {
     if (Raiz->n_hijos != 0) {
         for (int i = 0; i < Raiz->n_hijos; i++) {
@@ -140,7 +150,7 @@ void MiniMaxConPoda(Nodo *Raiz, double alpha, double beta) {
                 }
                 alpha = std::max(alpha, Raiz->valor);
                 if (beta <= alpha) {
-                    break;  // Poda alfa-beta
+                    break;  
                 }
             }
         } else { // MIN
@@ -151,7 +161,7 @@ void MiniMaxConPoda(Nodo *Raiz, double alpha, double beta) {
                 }
                 beta = std::min(beta, Raiz->valor);
                 if (beta <= alpha) {
-                    break;  // Poda alfa-beta
+                    break; 
                 }
             }
         }
@@ -160,6 +170,7 @@ void MiniMaxConPoda(Nodo *Raiz, double alpha, double beta) {
     }
 }
 
+//Elige la mejor tirada
 int ElegirTirada(char partida[filas][columnas], int dificultad, int posibilidades, bool victoriaCPU, bool victoriaJugador, int profundidad, double heuristica){
 	Nodo Raiz = CreaNodo(partida,0,dificultad, posibilidades, victoriaCPU, victoriaJugador);
 	int movimiento;
@@ -167,7 +178,6 @@ int ElegirTirada(char partida[filas][columnas], int dificultad, int posibilidade
 	ValorarHojas(&Raiz, heuristica);
 	MiniMaxConPoda(&Raiz, -100000, 100000);
 
-	// Elegimos random entre todas las posibilidades que son igual de buenas
 	int num_tiradas_buenas = 0;
 	int tiradas_buenas[8];
 	int i; int j=0;

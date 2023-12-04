@@ -3,6 +3,7 @@
 #include "Minimax.h"
 using namespace std;
 
+//imprime el tablero
 void mostrarTablero(char partida[filas][columnas]){
 	for(int i = 0; i < filas; i++){
 		cout << "|";
@@ -15,6 +16,7 @@ void mostrarTablero(char partida[filas][columnas]){
 	cout<<endl;
 }
 
+//revisa todas las posibilidades en donde se pueden poner fichas
 int Posibilidades(char partida[filas][columnas]){
 	int cont = 0;
 
@@ -27,6 +29,7 @@ int Posibilidades(char partida[filas][columnas]){
 	return cont;
 }
 
+//revisa si la IA gano
 int VictoriaCPU(char partida[filas][columnas]){
     char ficha = 'X';
 	// Chequeo horizontal
@@ -92,6 +95,7 @@ int VictoriaCPU(char partida[filas][columnas]){
 	return 0;
 }
 
+//revisa si el jugador ya gano
 int VictoriaJugador(char partida[filas][columnas]){
     char ficha = 'O';
 	// Chequeo horizontal
@@ -157,12 +161,14 @@ int VictoriaJugador(char partida[filas][columnas]){
 	return 0;
 }
 
+//asigna puntaje a la victoria del jugador o IA
 double Heuristica(char partida[filas][columnas]){
 	if (VictoriaCPU(partida)) return 1024;
 	if (VictoriaJugador(partida)) return -1024;
 	else return 0;
 }
 
+//Crea una nueva partida vacia
 void NuevaPartida(char partida[filas][columnas]){
 	for(int i = 0; i < filas; i++){
 		for(int j = 0; j < columnas; j++){
@@ -171,6 +177,7 @@ void NuevaPartida(char partida[filas][columnas]){
 	}
 }
 
+//Turno jugador
 int JuegaJugador(char partida[filas][columnas],char ficha){
 	int columna;
 	mostrarTablero(partida);
@@ -190,6 +197,7 @@ int JuegaJugador(char partida[filas][columnas],char ficha){
 	return 0;
 }
 
+//Turno IA
 int JuegaCPU(char partida[filas][columnas], int dificultad,char ficha){
 	mostrarTablero(partida);
 	cout << "La IA esta jugando... \n";
@@ -198,6 +206,7 @@ int JuegaCPU(char partida[filas][columnas], int dificultad,char ficha){
 	return 0;
 }
 
+//Seleccion de dificultad
 void PantallaSeleccionDificultad(int *dificultad){
 	cout << "Elija dificultad del juego:\n1) Facil.\n2) Medio.\n3) Dificil." << endl;
 
@@ -209,6 +218,7 @@ void PantallaSeleccionDificultad(int *dificultad){
 	}
 }
 
+//Seleccion de quien comienza el juego (IA o Jugador)
 int SeleccionInicio(){
 	cout << "Elija quien comienza el juego:\n1) IA.\n2) Jugador." << endl;
 	int eleccion; cin >> eleccion;
@@ -223,6 +233,7 @@ int SeleccionInicio(){
 	return 0;
 }
 
+//Guarda la partida en el csv
 void guardarPartida(string nombreArchivo, char partida[filas][columnas]){
 	ofstream archivo(nombreArchivo);
 
@@ -242,6 +253,7 @@ void guardarPartida(string nombreArchivo, char partida[filas][columnas]){
 	archivo.close();
 }
 
+//Desarrolla la partida
 void Partida1jug(char partida[filas][columnas], bool inicial, int dificultad){
 	int contador_jugadas = 1;
 	while(1){
@@ -258,7 +270,7 @@ void Partida1jug(char partida[filas][columnas], bool inicial, int dificultad){
 			return;
 			}
 		} else {
-			// Turno CPU
+			// Turno IA
 			JuegaCPU(partida,dificultad,'X');
 			if(VictoriaCPU(partida)){
 				mostrarTablero(partida);
@@ -279,6 +291,7 @@ void Partida1jug(char partida[filas][columnas], bool inicial, int dificultad){
 	}
 }
 
+//Ajustes de la partida (dificultad - Inicio)
 void ConfiguracionPartida(){
 	char partida[filas][columnas]; 
 	int dificultad;
@@ -288,6 +301,7 @@ void ConfiguracionPartida(){
 	Partida1jug(partida, inicial, dificultad);
 }
 
+//Carga partida en caso de que exista una
 void cargarPartida(string nombreArchivo) {
 	char partida[filas][columnas]; 
 	NuevaPartida(partida);
@@ -303,10 +317,8 @@ void cargarPartida(string nombreArchivo) {
             char valor;
             archivo >> valor;
             if (valor == '|') {
-                // Ignorar los delimitadores '|'
                 archivo.ignore();
             } else {
-                // Asignar el valor leído a la matriz partida
                 partida[i][j] = valor;
             }
         }
