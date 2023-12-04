@@ -34,23 +34,36 @@ cargarPartida(string nombreArchivo): Carga la ultima partida si existe. [void]
 ## Decisiones de diseño
 
 ---------- MENU ----------
+
 1) Jugar nueva partida.
 2) Salir.
 
 ---------- TABLERO ----------
+
 | | | | | | | |
+
 | | | | | | | |
+
 | | | | | | | |
+
 | | | | | | | |
+
 | | | | | | | |
+
 | | | | | | | |
 
 ---------- TABLERO (ejemplo) ----------
+
 | | | | | | | |
+
 | | | | | | | |
+
 | | | | | | | |
+
 | | | | | | |O|
+
 | |X| |X| | |X|
+
 |O|O|O|O| |X|X|
 
 ## Resultados de pruebas
